@@ -1,0 +1,25 @@
+# .github/workflows/deploy.yml
+name: Deploy para EC2 via SCP
+
+on:
+  push:
+    branches:
+      - main  # ou a branch que você usa para deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositório
+        uses: actions/checkout@v3
+
+      - name: Copiar index.html via SCP para EC2
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "index.html"
+          target: "/var/www/html/"
